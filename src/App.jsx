@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react';
+import { breedsData } from './data/breedsData';
+import { BreedDetailPage } from './components/BreedDetailPage';
 import whiskerLogo from './assets/whisker-logo.png';
-import manolo1Img from './assets/manolo1.png';
-import manoloImg from './assets/manolo.png';
-import ragdollImg from './assets/ragdoll.png';
+import ragdoll1Img from './assets/ragdoll1.jpg';
+import ragdoll2Img from './assets/ragdoll2.jpg';
+import bshNew1Img from './assets/bsh_new1.jpg';
+import bshNew2Img from './assets/bsh_new2.jpg';
+import bengalNew1Img from './assets/bengal_new1.jpg';
+import bengalNew2Img from './assets/bengal_new2.jpg';
 import bsh1Img from './assets/bsh1.png';
 import bsh2Img from './assets/bsh2.png';
 import bengalImg from './assets/bengal.png';
 import bengal2Img from './assets/bengal2.png';
+import mainecoonNew1Img from './assets/mainecoon_new1.jpg';
+import mainecoonNew2Img from './assets/mainecoon_new2.jpg';
 import mainecoon1Img from './assets/mainecoon1.png';
 import mainecoon2Img from './assets/mainecoon2.png';
 
@@ -67,10 +74,10 @@ const highlights = [
 ];
 
 const kittens = [
-  { name: 'Manolo', breed: 'Ragdoll', age: '4 months', location: 'Home grown', images: [manolo1Img, manoloImg] },
-  { name: 'British Shorthair', breed: 'British Shorthair', age: '3 months', location: 'Home grown', images: [bsh1Img, bsh2Img] },
-  { name: 'Bengal', breed: 'Bengal', age: '4 months', location: 'Health checked', images: [bengalImg, bengal2Img] },
-  { name: 'Maine Coon', breed: 'Maine Coon', age: '3 months', location: 'Health checked', images: [mainecoon1Img, mainecoon2Img] }
+  { name: 'Ragdoll', breed: 'Ragdoll', age: '4 months', location: 'Home grown', images: [ragdoll1Img, ragdoll2Img] },
+  { name: 'British Shorthair', breed: 'British Shorthair', age: '3 months', location: 'Home grown', images: [bshNew1Img, bshNew2Img] },
+  { name: 'Bengal', breed: 'Bengal', age: '4 months', location: 'Health checked', images: [bengalNew1Img, bengalNew2Img] },
+  { name: 'Maine Coon', breed: 'Maine Coon', age: '3 months', location: 'Health checked', images: [mainecoonNew1Img, mainecoonNew2Img] }
 ];
 
 const breeds = [
@@ -159,32 +166,89 @@ const faqs = [
 
 const quizQuestions = [
   {
-    prompt: 'How much time can you spend with your cat?',
-    options: [
-      { label: 'A little', tag: 'calm' },
-      { label: 'A fair amount', tag: 'balanced' },
-      { label: 'A lot', tag: 'social' }
-    ]
-  },
-  {
-    prompt: 'Do you want a playful or relaxed companion?',
-    options: [
-      { label: 'Playful', tag: 'playful' },
-      { label: 'Relaxed', tag: 'calm' },
-      { label: 'Balanced', tag: 'balanced' }
-    ]
-  },
-  {
+    id: 'q1',
     prompt: 'Would you prefer a low-maintenance cat?',
     options: [
-      { label: 'Yes', tag: 'easy' },
-      { label: 'No', tag: 'hands-on' },
-      { label: 'Either', tag: 'balanced' }
+      {
+        label: 'Yes',
+        scores: { 'Ragdoll': 1, 'British Shorthair': 3, 'Bengal': 2, 'Maine Coon': 1 }
+      },
+      {
+        label: 'No',
+        scores: { 'Ragdoll': 3, 'British Shorthair': 1, 'Bengal': 2, 'Maine Coon': 3 }
+      },
+      {
+        label: 'Either',
+        scores: { 'Ragdoll': 2, 'British Shorthair': 2, 'Bengal': 2, 'Maine Coon': 2 }
+      }
+    ]
+  },
+  {
+    id: 'q2',
+    prompt: 'Do you want a playful or relaxed companion?',
+    options: [
+      {
+        label: 'Playful',
+        scores: { 'Ragdoll': 1, 'British Shorthair': 1, 'Bengal': 3, 'Maine Coon': 3 }
+      },
+      {
+        label: 'Relaxed',
+        scores: { 'Ragdoll': 3, 'British Shorthair': 3, 'Bengal': 1, 'Maine Coon': 2 }
+      },
+      {
+        label: 'Balanced',
+        scores: { 'Ragdoll': 3, 'British Shorthair': 2, 'Bengal': 2, 'Maine Coon': 3 }
+      }
+    ]
+  },
+  {
+    id: 'q3',
+    prompt: 'How much time can you spend with your cat?',
+    options: [
+      {
+        label: 'A little',
+        scores: { 'Ragdoll': 1, 'British Shorthair': 3, 'Bengal': 1, 'Maine Coon': 1 }
+      },
+      {
+        label: 'A fair amount',
+        scores: { 'Ragdoll': 3, 'British Shorthair': 3, 'Bengal': 2, 'Maine Coon': 3 }
+      },
+      {
+        label: 'A lot',
+        scores: { 'Ragdoll': 3, 'British Shorthair': 2, 'Bengal': 3, 'Maine Coon': 3 }
+      }
     ]
   }
 ];
 
-function KittenCard({ kitten }) {
+const breedInfoMap = {
+  'Ragdoll': {
+    name: 'Ragdoll',
+    tagline: 'Affectionate & Gentle Companion',
+    description: 'Sweet-tempered, quiet, and docile. Ragdolls love relaxing by your side and cuddling.',
+    image: ragdoll1Img
+  },
+  'British Shorthair': {
+    name: 'British Shorthair',
+    tagline: 'Calm, Easy-going & Plush Companion',
+    description: 'Peaceful, independent, and easy to care for. Perfect for busy households.',
+    image: bshNew1Img
+  },
+  'Bengal': {
+    name: 'Bengal',
+    tagline: 'Bright, Active & Playful Adventurer',
+    description: 'High-energy, curious, and intelligent with a beautiful wild-spotted coat.',
+    image: bengalNew1Img
+  },
+  'Maine Coon': {
+    name: 'Maine Coon',
+    tagline: 'Friendly Giant with a Big Heart',
+    description: 'Gentle giant with a playful personality and soft coat. Wonderful family companion.',
+    image: mainecoonNew1Img
+  }
+};
+
+function KittenCard({ kitten, onSelectBreed }) {
   const images = kitten.images || (kitten.img ? [kitten.img] : []);
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
@@ -198,12 +262,13 @@ function KittenCard({ kitten }) {
     setCurrentImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
+  const breedSlug = kitten.breed.toLowerCase().replace(/ /g, '-');
   const waMessage = encodeURIComponent(`Hello Whiskers Haven, I am interested in ${kitten.name} (${kitten.breed}).`);
   const waUrl = `https://wa.me/${primaryPhoneLink}?text=${waMessage}`;
 
   return (
     <article className="kitten-card">
-      <div className="kitten-img-wrap">
+      <div className="kitten-img-wrap" onClick={() => onSelectBreed && onSelectBreed(breedSlug)}>
         <img src={images[currentImgIndex]} alt={kitten.name} />
         {images.length > 1 && (
           <>
@@ -227,8 +292,20 @@ function KittenCard({ kitten }) {
       </div>
       <div className="kitten-body">
         <h3>{kitten.name}</h3>
-        <p>{kitten.breed} · {kitten.age} · {kitten.location}</p>
-        <a href={waUrl} target="_blank" rel="noreferrer" className="btn btn-dark">Get {kitten.name}</a>
+        <p className="kitten-details">{kitten.breed} · {kitten.age} · {kitten.location}</p>
+        <div className="card-actions-row">
+          <a href={waUrl} target="_blank" rel="noreferrer" className="card-cta">Get {kitten.name}</a>
+          <a
+            href={`#cats/${breedSlug}`}
+            className="breed-explore-link"
+            onClick={(e) => {
+              e.preventDefault();
+              if (onSelectBreed) onSelectBreed(breedSlug);
+            }}
+          >
+            Explore Breed →
+          </a>
+        </div>
       </div>
     </article>
   );
@@ -244,6 +321,57 @@ function App() {
   const [statValues, setStatValues] = useState(statsConfig.map(() => 0));
   const [trustValues, setTrustValues] = useState(trustStatsConfig.map((item) => item.target ? 0 : item.value));
   const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [highlightedPlan, setHighlightedPlan] = useState(null);
+
+  const [activeBreedSlug, setActiveBreedSlug] = useState(() => {
+    const hash = window.location.hash;
+    if (hash.startsWith('#cats/')) {
+      return hash.replace('#cats/', '');
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#cats/')) {
+        const slug = hash.replace('#cats/', '');
+        setActiveBreedSlug(slug);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        setActiveBreedSlug(null);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const navigateToBreed = (slug) => {
+    window.location.hash = `#cats/${slug}`;
+    setActiveBreedSlug(slug);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateHome = () => {
+    window.location.hash = '#home';
+    setActiveBreedSlug(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const activeBreedObject = breedsData.find((b) => b.slug === activeBreedSlug);
+
+  const handleGroomingClick = (e, planName) => {
+    e.preventDefault();
+    const elem = document.getElementById('grooming');
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth' });
+    }
+    setHighlightedPlan(planName);
+    setTimeout(() => {
+      setHighlightedPlan(null);
+    }, 2500);
+  };
 
   const visibleKittens = activeFilter === 'All'
     ? kittens
@@ -251,37 +379,48 @@ function App() {
 
   const filterOptions = ['All', ...new Set(kittens.map((kitten) => kitten.breed))];
 
-  const handleQuizAnswer = (tag) => {
-    const nextAnswers = [...answers, tag];
+  const handleQuizSelectOption = (option) => {
+    const nextAnswers = [...answers];
+    nextAnswers[quizStep] = option;
     setAnswers(nextAnswers);
 
-    if (quizStep < quizQuestions.length - 1) {
-      setQuizStep(quizStep + 1);
-    } else {
-      setQuizStep(quizQuestions.length);
+    setQuizStep((prev) => prev + 1);
+  };
+
+  const handleQuizBack = () => {
+    if (quizStep > 0) {
+      setQuizStep((prev) => prev - 1);
     }
   };
 
-  const quizResult = quizStep === quizQuestions.length
-    ? (() => {
-        const scoreMap = {
-          calm: ['Ragdoll', 'British Shorthair'],
-          balanced: ['British Shorthair', 'Ragdoll'],
-          social: ['Maine Coon', 'Bengal'],
-          playful: ['Bengal', 'Maine Coon'],
-          easy: ['British Shorthair', 'Ragdoll'],
-          'hands-on': ['Maine Coon', 'Bengal']
-        };
+  const handleQuizReset = () => {
+    setQuizStep(0);
+    setAnswers([]);
+  };
 
-        const picked = answers.reduce((acc, tag) => {
-          const matches = scoreMap[tag] || [];
-          matches.forEach((breed) => acc[breed] = (acc[breed] || 0) + 1);
-          return acc;
-        }, {});
+  const calculateQuizResults = () => {
+    const breedScores = {
+      'Ragdoll': 0,
+      'British Shorthair': 0,
+      'Bengal': 0,
+      'Maine Coon': 0
+    };
 
-        return Object.entries(picked).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([breed]) => breed);
-      })()
-    : [];
+    answers.forEach((option) => {
+      if (option && option.scores) {
+        Object.entries(option.scores).forEach(([breed, score]) => {
+          breedScores[breed] = (breedScores[breed] || 0) + score;
+        });
+      }
+    });
+
+    const maxScore = Math.max(...Object.values(breedScores));
+    const topBreeds = Object.entries(breedScores)
+      .filter(([_, score]) => score === maxScore)
+      .map(([breed]) => breed);
+
+    return { breedScores, maxScore, topBreeds };
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -329,13 +468,28 @@ function App() {
     <div className="page-shell">
       <header className="topbar">
         <div className="container nav-wrap">
-          <a href="#home" className="brand">
+          <a href="#home" className="brand" onClick={(e) => { e.preventDefault(); navigateHome(); }}>
             <img className="brand-logo" src={whiskerLogo} alt="Whiskers Haven" />
           </a>
 
           <nav className="desktop-nav" aria-label="Main navigation">
             {navLinks.map((link) => (
-              <a key={link.label} href={link.href}>{link.label}</a>
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => {
+                  if (activeBreedSlug) {
+                    e.preventDefault();
+                    navigateHome();
+                    setTimeout(() => {
+                      const elem = document.querySelector(link.href);
+                      if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }
+                }}
+              >
+                {link.label}
+              </a>
             ))}
           </nav>
 
@@ -365,7 +519,15 @@ function App() {
       </header>
 
       <main>
-        <section className="hero" id="home">
+        {activeBreedObject ? (
+          <BreedDetailPage
+            breed={activeBreedObject}
+            onBack={navigateHome}
+            primaryPhoneLink={primaryPhoneLink}
+          />
+        ) : (
+          <>
+            <section className="hero" id="home">
           <div className="hero-overlay" />
           <div className="container hero-grid">
             <div className="hero-copy">
@@ -394,19 +556,59 @@ function App() {
               </div>
             </div>
 
-            <div className="hero-card">
-              <div className="card-top">
-                <p>Featured today</p>
-                <span>Available now</span>
+            <div className="hero-side">
+              <div className="hero-grooming-panel">
+                <p className="eyebrow">GROOMING MENU</p>
+                <div className="hero-grooming-list">
+                  <a
+                    href="#grooming"
+                    className="grooming-service-card"
+                    onClick={(e) => handleGroomingClick(e, 'Essential Groom')}
+                  >
+                    <span className="service-name">Essential Groom</span>
+                    <span className="service-price">
+                      ₹899 <span className="service-arrow">→</span>
+                    </span>
+                  </a>
+
+                  <a
+                    href="#grooming"
+                    className="grooming-service-card"
+                    onClick={(e) => handleGroomingClick(e, 'Complete Bath & Groom')}
+                  >
+                    <span className="service-name">Complete Bath & Groom</span>
+                    <span className="service-price">
+                      ₹1,499 <span className="service-arrow">→</span>
+                    </span>
+                  </a>
+
+                  <a
+                    href="#grooming"
+                    className="grooming-service-card"
+                    onClick={(e) => handleGroomingClick(e, 'Full Groom + Haircut')}
+                  >
+                    <span className="service-name">Full Groom + Haircut</span>
+                    <span className="service-price">
+                      ₹1,999 <span className="service-arrow">→</span>
+                    </span>
+                  </a>
+                </div>
               </div>
-              <h3>Meet British Shorthair, a calm companion</h3>
-              <p>Social, affectionate, and beautifully raised with careful attention from the very first week.</p>
-              <ul>
-                <li>Vet checked</li>
-                <li>Vaccinated</li>
-                <li>Microchipped</li>
-              </ul>
-              <a href="#kittens" className="card-link">See available kittens →</a>
+
+              <div className="hero-card">
+                <div className="card-top">
+                  <p>Featured today</p>
+                  <span>Available now</span>
+                </div>
+                <h3>Meet British Shorthair, a calm companion</h3>
+                <p>Social, affectionate, and beautifully raised with careful attention from the very first week.</p>
+                <ul>
+                  <li>Vet checked</li>
+                  <li>Vaccinated</li>
+                  <li>Microchipped</li>
+                </ul>
+                <a href="#kittens" className="card-link">See available kittens →</a>
+              </div>
             </div>
           </div>
         </section>
@@ -443,15 +645,153 @@ function App() {
 
             <div className="card-grid">
               {visibleKittens.map((kitten) => (
-                <KittenCard key={kitten.name} kitten={kitten} />
+                <KittenCard key={kitten.name} kitten={kitten} onSelectBreed={navigateToBreed} />
               ))}
             </div>
           </div>
         </section>
 
         <section className="section grooming-section" id="grooming">
+          {/* Enhanced Cartoon Cat Characters & Grooming Accents */}
+          <div className="grooming-decorations-vivid" aria-hidden="true">
+            {/* Top-Left Peeking Cartoon Cat */}
+            <div className="cartoon-cat-wrap cartoon-cat-top-left">
+              <svg viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M35 85 L25 30 L60 58 L95 58 L130 30 L120 85 Z" fill="#2a2522" />
+                <path d="M33 38 L43 56 L54 56 Z" fill="#c9a96e" opacity="0.75"/>
+                <path d="M122 38 L112 56 L101 56 Z" fill="#c9a96e" opacity="0.75"/>
+                <path d="M25 85 Q77 62 130 85 Q140 125 77 135 Q15 125 25 85 Z" fill="#2a2522"/>
+                <ellipse cx="55" cy="95" rx="8" ry="11" fill="#f6d99a"/>
+                <ellipse cx="99" cy="95" rx="8" ry="11" fill="#f6d99a"/>
+                <ellipse cx="55" cy="95" rx="3.5" ry="7" fill="#111111"/>
+                <ellipse cx="99" cy="95" rx="3.5" ry="7" fill="#111111"/>
+                <circle cx="53" cy="91" r="2" fill="#ffffff"/>
+                <circle cx="97" cy="91" r="2" fill="#ffffff"/>
+                <polygon points="74,104 80,104 77,108" fill="#c9a96e"/>
+                <path d="M72 111 Q77 115 77 109 Q77 115 82 111" stroke="#c9a96e" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                <path d="M20 100 L44 102 M16 107 L44 105 M22 114 L46 109" stroke="#f6d99a" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M134 100 L110 102 M138 107 L110 105 M132 114 L108 109" stroke="#f6d99a" strokeWidth="1.5" strokeLinecap="round"/>
+                <rect x="38" y="124" width="26" height="16" rx="8" fill="#2a2522" stroke="#c9a96e" strokeWidth="1.5"/>
+                <rect x="88" y="124" width="26" height="16" rx="8" fill="#2a2522" stroke="#c9a96e" strokeWidth="1.5"/>
+              </svg>
+            </div>
+
+            {/* Top-Right Peeking Cartoon Cat */}
+            <div className="cartoon-cat-wrap cartoon-cat-top-right">
+              <svg viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M35 85 L25 30 L60 58 L95 58 L130 30 L120 85 Z" fill="#3d322a" />
+                <path d="M33 38 L43 56 L54 56 Z" fill="#e0b878" opacity="0.8"/>
+                <path d="M122 38 L112 56 L101 56 Z" fill="#e0b878" opacity="0.8"/>
+                <path d="M25 85 Q77 62 130 85 Q140 125 77 135 Q15 125 25 85 Z" fill="#3d322a"/>
+                <ellipse cx="55" cy="95" rx="8" ry="11" fill="#ffe3ad"/>
+                <ellipse cx="99" cy="95" rx="8" ry="11" fill="#ffe3ad"/>
+                <ellipse cx="55" cy="95" rx="3.5" ry="7" fill="#111111"/>
+                <ellipse cx="99" cy="95" rx="3.5" ry="7" fill="#111111"/>
+                <circle cx="53" cy="91" r="2" fill="#ffffff"/>
+                <circle cx="97" cy="91" r="2" fill="#ffffff"/>
+                <polygon points="74,104 80,104 77,108" fill="#e0b878"/>
+                <path d="M72 111 Q77 115 77 109 Q77 115 82 111" stroke="#e0b878" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                <path d="M20 100 L44 102 M16 107 L44 105 M22 114 L46 109" stroke="#ffe3ad" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M134 100 L110 102 M138 107 L110 105 M132 114 L108 109" stroke="#ffe3ad" strokeWidth="1.5" strokeLinecap="round"/>
+                <rect x="38" y="124" width="26" height="16" rx="8" fill="#3d322a" stroke="#e0b878" strokeWidth="1.5"/>
+                <rect x="88" y="124" width="26" height="16" rx="8" fill="#3d322a" stroke="#e0b878" strokeWidth="1.5"/>
+              </svg>
+            </div>
+
+            {/* Bottom-Right Sitting Groomed Cartoon Cat */}
+            <div className="cartoon-cat-wrap cartoon-cat-bottom-right">
+              <svg viewBox="0 0 130 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M98 145 Q128 140 122 102 Q118 72 108 82" stroke="#c9a96e" strokeWidth="10" strokeLinecap="round" fill="none"/>
+                <path d="M40 92 Q25 150 65 155 Q105 150 90 92 Z" fill="#1c1917"/>
+                <path d="M50 92 Q65 125 80 92 Q65 106 50 92 Z" fill="#f8f1e5" opacity="0.95"/>
+                <circle cx="65" cy="62" r="30" fill="#1c1917"/>
+                <polygon points="40,46 34,16 58,38" fill="#1c1917"/>
+                <polygon points="42,42 38,22 54,38" fill="#c9a96e" opacity="0.6"/>
+                <polygon points="90,46 96,16 72,38" fill="#1c1917"/>
+                <polygon points="88,42 92,22 76,38" fill="#c9a96e" opacity="0.6"/>
+                <ellipse cx="54" cy="60" rx="5.5" ry="7.5" fill="#f6d99a"/>
+                <ellipse cx="76" cy="60" rx="5.5" ry="7.5" fill="#f6d99a"/>
+                <ellipse cx="54" cy="60" rx="2.2" ry="5" fill="#111"/>
+                <ellipse cx="76" cy="60" rx="2.2" ry="5" fill="#111"/>
+                <circle cx="52" cy="57" r="1.5" fill="#fff"/>
+                <circle cx="74" cy="57" r="1.5" fill="#fff"/>
+                <polygon points="62,68 68,68 65,71" fill="#c9a96e"/>
+                <path d="M61 74 Q65 77 65 72 Q65 77 69 74" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+                <path d="M53 84 L77 90 L67 87 L57 90 L77 84 Z" fill="#c9a96e"/>
+                <circle cx="65" cy="86" r="2.8" fill="#ffffff"/>
+                <path d="M34 66 L48 67 M32 72 L48 70" stroke="#f6d99a" strokeWidth="1.2"/>
+                <path d="M96 66 L82 67 M98 72 L82 70" stroke="#f6d99a" strokeWidth="1.2"/>
+              </svg>
+            </div>
+
+            {/* Grooming Tool Badges - High Contrast Floating Cards */}
+            <div className="vivid-badge tool-scissors" style={{ top: '7%', left: '12%' }}>
+              <span className="badge-icon">✂️</span>
+              <span className="badge-label">Precision Trim</span>
+            </div>
+
+            <div className="vivid-badge tool-comb" style={{ bottom: '10%', left: '10%' }}>
+              <span className="badge-icon">🪮</span>
+              <span className="badge-label">Coat Styling</span>
+            </div>
+
+            <div className="vivid-badge tool-bath" style={{ top: '7%', right: '12%' }}>
+              <span className="badge-icon">🫧</span>
+              <span className="badge-label">Cat-Safe Bath</span>
+            </div>
+
+            <div className="vivid-badge tool-paw" style={{ bottom: '10%', right: '12%' }}>
+              <span className="badge-icon">🐾</span>
+              <span className="badge-label">Paw Care</span>
+            </div>
+
+            {/* Playful Paw Trail */}
+            <div className="vivid-paw-trail">
+              <span className="vivid-paw p1">🐾</span>
+              <span className="vivid-paw p2">🐾</span>
+              <span className="vivid-paw p3">🐾</span>
+              <span className="vivid-paw p4">🐾</span>
+            </div>
+
+            {/* Soap Bubbles */}
+            <div className="vivid-bubble b1" style={{ top: '14%', right: '8%' }} />
+            <div className="vivid-bubble b2" style={{ top: '24%', right: '4%' }} />
+            <div className="vivid-bubble b3" style={{ bottom: '20%', left: '6%' }} />
+            <div className="vivid-bubble b4" style={{ bottom: '8%', right: '8%' }} />
+
+            {/* Golden Sparkles */}
+            <div className="vivid-sparkle s1" style={{ top: '5%', left: '20%' }}>✨</div>
+            <div className="vivid-sparkle s2" style={{ top: '12%', right: '20%' }}>✨</div>
+            <div className="vivid-sparkle s3" style={{ bottom: '18%', left: '18%' }}>✨</div>
+            <div className="vivid-sparkle s4" style={{ bottom: '5%', right: '20%' }}>✨</div>
+          </div>
+
           <div className="container">
             <div className="grooming-pricing">
+              {/* Dedicated Top Decorative Row with Peeking Cartoon Cat */}
+              <div className="grooming-top-decor" aria-hidden="true">
+                <div className="mobile-cartoon-cat">
+                  <svg viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M35 85 L25 30 L60 58 L95 58 L130 30 L120 85 Z" fill="#2a2522" />
+                    <path d="M33 38 L43 56 L54 56 Z" fill="#c9a96e" opacity="0.75"/>
+                    <path d="M122 38 L112 56 L101 56 Z" fill="#c9a96e" opacity="0.75"/>
+                    <path d="M25 85 Q77 62 130 85 Q140 125 77 135 Q15 125 25 85 Z" fill="#2a2522"/>
+                    <ellipse cx="55" cy="95" rx="8" ry="11" fill="#f6d99a"/>
+                    <ellipse cx="99" cy="95" rx="8" ry="11" fill="#f6d99a"/>
+                    <ellipse cx="55" cy="95" rx="3.5" ry="7" fill="#111111"/>
+                    <ellipse cx="99" cy="95" rx="3.5" ry="7" fill="#111111"/>
+                    <circle cx="53" cy="91" r="2" fill="#ffffff"/>
+                    <circle cx="97" cy="91" r="2" fill="#ffffff"/>
+                    <polygon points="74,104 80,104 77,108" fill="#c9a96e"/>
+                    <path d="M72 111 Q77 115 77 109 Q77 115 82 111" stroke="#c9a96e" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                    <path d="M20 100 L44 102 M16 107 L44 105 M22 114 L46 109" stroke="#f6d99a" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M134 100 L110 102 M138 107 L110 105 M132 114 L108 109" stroke="#f6d99a" strokeWidth="1.5" strokeLinecap="round"/>
+                    <rect x="38" y="124" width="26" height="16" rx="8" fill="#2a2522" stroke="#c9a96e" strokeWidth="1.5"/>
+                    <rect x="88" y="124" width="26" height="16" rx="8" fill="#2a2522" stroke="#c9a96e" strokeWidth="1.5"/>
+                  </svg>
+                </div>
+              </div>
+
               <div className="grooming-heading">
                 <p className="eyebrow">Cat grooming menu</p>
                 <h3>Polished care, tailored to every coat.</h3>
@@ -459,7 +799,7 @@ function App() {
               </div>
               <div className="grooming-plan-grid">
                 {groomingPlans.map((plan) => (
-                  <article key={plan.name} className={`grooming-plan ${plan.featured ? 'featured' : ''}`}>
+                  <article key={plan.name} className={`grooming-plan ${plan.featured ? 'featured' : ''} ${highlightedPlan === plan.name ? 'plan-highlighted' : ''}`}>
                     {plan.featured && <span className="popular-badge">Most loved</span>}
                     <div className="grooming-plan-top">
                       <p>{plan.name}</p>
@@ -478,6 +818,38 @@ function App() {
                 </div>
               </div>
               <p className="grooming-note">Prices may vary depending on coat condition, matting, size, and temperament.</p>
+
+              {/* Dedicated Bottom Decorative Row with Sitting Cartoon Cat + Paws */}
+              <div className="grooming-bottom-decor" aria-hidden="true">
+                <span className="decor-sparkle">✨</span>
+                <span className="decor-paw">🐾</span>
+                <div className="mobile-cartoon-cat bottom-cat">
+                  <svg viewBox="0 0 130 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M98 145 Q128 140 122 102 Q118 72 108 82" stroke="#c9a96e" strokeWidth="10" strokeLinecap="round" fill="none"/>
+                    <path d="M40 92 Q25 150 65 155 Q105 150 90 92 Z" fill="#1c1917"/>
+                    <path d="M50 92 Q65 125 80 92 Q65 106 50 92 Z" fill="#f8f1e5" opacity="0.95"/>
+                    <circle cx="65" cy="62" r="30" fill="#1c1917"/>
+                    <polygon points="40,46 34,16 58,38" fill="#1c1917"/>
+                    <polygon points="42,42 38,22 54,38" fill="#c9a96e" opacity="0.6"/>
+                    <polygon points="90,46 96,16 72,38" fill="#1c1917"/>
+                    <polygon points="88,42 92,22 76,38" fill="#c9a96e" opacity="0.6"/>
+                    <ellipse cx="54" cy="60" rx="5.5" ry="7.5" fill="#f6d99a"/>
+                    <ellipse cx="76" cy="60" rx="5.5" ry="7.5" fill="#f6d99a"/>
+                    <ellipse cx="54" cy="60" rx="2.2" ry="5" fill="#111"/>
+                    <ellipse cx="76" cy="60" rx="2.2" ry="5" fill="#111"/>
+                    <circle cx="52" cy="57" r="1.5" fill="#fff"/>
+                    <circle cx="74" cy="57" r="1.5" fill="#fff"/>
+                    <polygon points="62,68 68,68 65,71" fill="#c9a96e"/>
+                    <path d="M61 74 Q65 77 65 72 Q65 77 69 74" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+                    <path d="M53 84 L77 90 L67 87 L57 90 L77 84 Z" fill="#c9a96e"/>
+                    <circle cx="65" cy="86" r="2.8" fill="#ffffff"/>
+                    <path d="M34 66 L48 67 M32 72 L48 70" stroke="#f6d99a" strokeWidth="1.2"/>
+                    <path d="M96 66 L82 67 M98 72 L82 70" stroke="#f6d99a" strokeWidth="1.2"/>
+                  </svg>
+                </div>
+                <span className="decor-paw">🐾</span>
+                <span className="decor-sparkle">✨</span>
+              </div>
             </div>
           </div>
         </section>
@@ -489,18 +861,32 @@ function App() {
               <h2>Choose a breed that matches your lifestyle.</h2>
             </div>
             <div className="breed-row">
-              {breeds.map((breed) => (
-                <article key={breed.name} className="breed-card">
+              {breedsData.map((breed) => (
+                <article
+                  key={breed.name}
+                  className="breed-card clickable"
+                  onClick={() => navigateToBreed(breed.slug)}
+                >
                   <h3>{breed.name}</h3>
-                  <p>{breed.personality}</p>
-                  <span>{breed.detail}</span>
+                  <p>{breed.tagline}</p>
+                  <span>{breed.characteristics.personality}</span>
+                  <a
+                    href={`#cats/${breed.slug}`}
+                    className="breed-card-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigateToBreed(breed.slug);
+                    }}
+                  >
+                    Explore {breed.name} Page →
+                  </a>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="section">
+        <section className="section" id="quiz">
           <div className="container quiz-shell">
             <div className="section-heading center">
               <p className="eyebrow">Personality match</p>
@@ -509,29 +895,97 @@ function App() {
 
             {quizStep < quizQuestions.length ? (
               <div className="quiz-card">
+                <div className="quiz-header-bar">
+                  {quizStep > 0 ? (
+                    <button type="button" className="quiz-back-btn" onClick={handleQuizBack}>
+                      ← Back
+                    </button>
+                  ) : (
+                    <span className="quiz-back-placeholder" />
+                  )}
+                  <span className="quiz-step-count">Question {quizStep + 1} of {quizQuestions.length}</span>
+                </div>
+
                 <div className="quiz-progress">
                   {quizQuestions.map((_, index) => (
-                    <span key={index} className={index <= quizStep ? 'active' : ''} /> 
+                    <span key={index} className={index <= quizStep ? 'active' : ''} />
                   ))}
                 </div>
-                <h3>{quizQuestions[quizStep].prompt}</h3>
-                <div className="quiz-options">
-                  {quizQuestions[quizStep].options.map((option) => (
-                    <button key={option.label} className="quiz-btn" onClick={() => handleQuizAnswer(option.tag)}>
-                      {option.label}
-                    </button>
-                  ))}
+
+                <h3 className="quiz-prompt">{quizQuestions[quizStep].prompt}</h3>
+
+                <div className="quiz-options-list">
+                  {quizQuestions[quizStep].options.map((option) => {
+                    const isSelected = answers[quizStep]?.label === option.label;
+                    return (
+                      <button
+                        key={option.label}
+                        type="button"
+                        className={`quiz-btn ${isSelected ? 'selected' : ''}`}
+                        onClick={() => handleQuizSelectOption(option)}
+                      >
+                        <span className="quiz-btn-label">{option.label}</span>
+                        <span className="quiz-btn-indicator">{isSelected ? '✓' : '→'}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-            ) : (
-              <div className="quiz-card result-card">
-                <h3>We think you will love:</h3>
-                <div className="result-list">
-                  {quizResult.map((breed) => <span key={breed}>{breed}</span>)}
+            ) : (() => {
+              const { breedScores, topBreeds } = calculateQuizResults();
+              return (
+                <div className="quiz-card result-card">
+                  <div className="result-badge-strip">
+                    <span className="result-badge">✦ Best Personality Match</span>
+                  </div>
+
+                  <h3>{topBreeds.length > 1 ? 'Your Top Matching Cats!' : 'Your Perfect Cat Match!'}</h3>
+                  <p className="result-subtitle">Based on your answers, here is the cat breed that fits your home best:</p>
+
+                  <div className="matched-breeds-row">
+                    {topBreeds.map((breedName) => {
+                      const breedInfo = breedInfoMap[breedName] || { name: breedName, tagline: '', description: '', image: ragdoll1Img };
+                      const score = breedScores[breedName];
+                      const waMessage = encodeURIComponent(`Hello Whiskers Haven, I completed the personality quiz and matched best with ${breedName} (${score}/9)! I am interested in learning more.`);
+                      const waUrl = `https://wa.me/${primaryPhoneLink}?text=${waMessage}`;
+
+                      return (
+                        <div key={breedName} className="matched-breed-card">
+                          <div className="matched-breed-image-wrap">
+                            <img src={breedInfo.image} alt={breedName} />
+                            <span className="matched-score-badge">{score}/9 Match</span>
+                          </div>
+                          <div className="matched-breed-content">
+                            <h4>{breedName}</h4>
+                            <p className="matched-tagline">{breedInfo.tagline}</p>
+                            <p className="matched-desc">{breedInfo.description}</p>
+                            <a href={waUrl} target="_blank" rel="noreferrer" className="btn btn-dark match-cta">
+                              Get {breedName}
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="quiz-score-breakdown">
+                    <p className="breakdown-label">Full Scoring Results:</p>
+                    <div className="scores-grid">
+                      {Object.entries(breedScores).map(([bName, bScore]) => (
+                        <div key={bName} className={`score-chip ${topBreeds.includes(bName) ? 'top-match' : ''}`}>
+                          <span className="chip-breed-name">{bName}</span>
+                          <span className="chip-score-val">{bScore}/9 pts</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button type="button" className="retake-quiz-btn" onClick={handleQuizReset}>
+                    ↺ Retake Quiz
+                  </button>
                 </div>
-                <a href="#contact" className="btn btn-dark">Talk to an expert</a>
-              </div>
-            )}
+              );
+            })()}
           </div>
         </section>
 
@@ -726,6 +1180,8 @@ function App() {
             </form>
           </div>
         </section>
+          </>
+        )}
       </main>
 
       {enquiryOpen && (
