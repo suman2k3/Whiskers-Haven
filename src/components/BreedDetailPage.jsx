@@ -1,21 +1,23 @@
 import { useState } from 'react';
+import { ImageLightbox } from './ImageLightbox';
 
 function VariantCard({ variant, primaryPhoneLink }) {
   const images = variant.images || [];
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const prevImage = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     setCurrentImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   const nextImage = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     setCurrentImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
   const waMessage = encodeURIComponent(
-    `Hello Whiskers Haven, I am interested in adopting ${variant.name} (${variant.breed} - ${variant.color}, ${variant.age}).`
+    `Hello Whiskers Haven, I am interested in adopting ${variant.name} (${variant.breed} - ${variant.color}).`
   );
   const waUrl = `https://wa.me/${primaryPhoneLink}?text=${waMessage}`;
 
@@ -23,6 +25,24 @@ function VariantCard({ variant, primaryPhoneLink }) {
     <article className="variant-card">
       <div className="variant-img-wrap">
         <img src={images[currentImgIndex]} alt={variant.name} />
+        <button
+          type="button"
+          className="card-resize-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setLightboxOpen(true);
+          }}
+          aria-label="View full screen photo"
+          title="Open full screen photo"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 3 21 3 21 9" />
+            <polyline points="9 21 3 21 3 15" />
+            <line x1="21" y1="3" x2="14" y2="10" />
+            <line x1="3" y1="21" x2="10" y2="14" />
+          </svg>
+        </button>
         {variant.availability && (
           <span className={`availability-badge ${variant.availability.toLowerCase()}`}>
             {variant.availability}
@@ -49,11 +69,21 @@ function VariantCard({ variant, primaryPhoneLink }) {
         )}
       </div>
 
+      {lightboxOpen && (
+        <ImageLightbox
+          images={images}
+          currentIndex={currentImgIndex}
+          onClose={() => setLightboxOpen(false)}
+          onPrev={() => setCurrentImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+          onNext={() => setCurrentImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+        />
+      )}
+
       <div className="variant-body">
         <div className="variant-header">
           <div>
             <h3>{variant.name}</h3>
-            <p className="variant-sub">{variant.breed} · {variant.age}</p>
+            <p className="variant-sub">{variant.breed}</p>
           </div>
           <span className="gender-tag">{variant.gender}</span>
         </div>
@@ -76,6 +106,8 @@ function VariantCard({ variant, primaryPhoneLink }) {
 }
 
 export function BreedDetailPage({ breed, onBack, primaryPhoneLink }) {
+  const [heroLightboxOpen, setHeroLightboxOpen] = useState(false);
+
   if (!breed) return null;
 
   return (
@@ -101,8 +133,34 @@ export function BreedDetailPage({ breed, onBack, primaryPhoneLink }) {
           <div className="breed-hero-grid">
             <div className="breed-cover-wrap">
               <img src={breed.coverImage} alt={breed.name} />
+              <button
+                type="button"
+                className="card-resize-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setHeroLightboxOpen(true);
+                }}
+                aria-label="View full screen photo"
+                title="Open full screen photo"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 3 21 3 21 9" />
+                  <polyline points="9 21 3 21 3 15" />
+                  <line x1="21" y1="3" x2="14" y2="10" />
+                  <line x1="3" y1="21" x2="10" y2="14" />
+                </svg>
+              </button>
               <span className="cover-badge">Official Breed Guide</span>
             </div>
+
+            {heroLightboxOpen && (
+              <ImageLightbox
+                images={[breed.coverImage]}
+                currentIndex={0}
+                onClose={() => setHeroLightboxOpen(false)}
+              />
+            )}
 
             <div className="breed-hero-content">
               <div className="breed-story-box">
@@ -155,7 +213,7 @@ export function BreedDetailPage({ breed, onBack, primaryPhoneLink }) {
             <p className="eyebrow">Available Kittens</p>
             <h2>Meet our available {breed.name}s.</h2>
             <p className="section-subtitle">
-              Each kitten is home grown, health-screened, and ready to bring warmth to your home.
+              Each kitten is home raised, health-screened, and ready to bring warmth to your home.
             </p>
           </div>
 

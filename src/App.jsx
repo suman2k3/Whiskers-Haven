@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { breedsData } from './data/breedsData';
 import { BreedDetailPage } from './components/BreedDetailPage';
+import { ImageLightbox } from './components/ImageLightbox';
 import whiskerLogo from './assets/whisker-logo.png';
 import ragdoll1Img from './assets/ragdoll1.jpg';
 import ragdoll2Img from './assets/ragdoll2.jpg';
@@ -74,10 +75,10 @@ const highlights = [
 ];
 
 const kittens = [
-  { name: 'Ragdoll', breed: 'Ragdoll', age: '4 months', location: 'Home grown', images: [ragdoll1Img, ragdoll2Img] },
-  { name: 'British Shorthair', breed: 'British Shorthair', age: '3 months', location: 'Home grown', images: [bshNew1Img, bshNew2Img] },
-  { name: 'Bengal', breed: 'Bengal', age: '4 months', location: 'Health checked', images: [bengalNew1Img, bengalNew2Img] },
-  { name: 'Maine Coon', breed: 'Maine Coon', age: '3 months', location: 'Health checked', images: [mainecoonNew1Img, mainecoonNew2Img] }
+  { name: 'Ragdoll', breed: 'Ragdoll', location: 'Home raised', images: [ragdoll1Img, ragdoll2Img] },
+  { name: 'British Shorthair', breed: 'British Shorthair', location: 'Home raised', images: [bshNew1Img, bshNew2Img] },
+  { name: 'Bengal', breed: 'Bengal', location: 'Health checked', images: [bengalNew1Img, bengalNew2Img] },
+  { name: 'Maine Coon', breed: 'Maine Coon', location: 'Health checked', images: [mainecoonNew1Img, mainecoonNew2Img] }
 ];
 
 const breeds = [
@@ -251,14 +252,15 @@ const breedInfoMap = {
 function KittenCard({ kitten, onSelectBreed }) {
   const images = kitten.images || (kitten.img ? [kitten.img] : []);
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const prevImage = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     setCurrentImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   const nextImage = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     setCurrentImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
@@ -268,8 +270,29 @@ function KittenCard({ kitten, onSelectBreed }) {
 
   return (
     <article className="kitten-card">
-      <div className="kitten-img-wrap" onClick={() => onSelectBreed && onSelectBreed(breedSlug)}>
+      <div
+        className="kitten-img-wrap"
+        onClick={() => onSelectBreed && onSelectBreed(breedSlug)}
+      >
         <img src={images[currentImgIndex]} alt={kitten.name} />
+        <button
+          type="button"
+          className="card-resize-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setLightboxOpen(true);
+          }}
+          aria-label="View full screen photo"
+          title="Open full screen photo"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 3 21 3 21 9" />
+            <polyline points="9 21 3 21 3 15" />
+            <line x1="21" y1="3" x2="14" y2="10" />
+            <line x1="3" y1="21" x2="10" y2="14" />
+          </svg>
+        </button>
         {images.length > 1 && (
           <>
             <button type="button" className="card-slider-btn prev" onClick={prevImage} aria-label="Previous image">
@@ -290,9 +313,19 @@ function KittenCard({ kitten, onSelectBreed }) {
           </>
         )}
       </div>
+
+      {lightboxOpen && (
+        <ImageLightbox
+          images={images}
+          currentIndex={currentImgIndex}
+          onClose={() => setLightboxOpen(false)}
+          onPrev={() => setCurrentImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+          onNext={() => setCurrentImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+        />
+      )}
       <div className="kitten-body">
         <h3>{kitten.name}</h3>
-        <p className="kitten-details">{kitten.breed} · {kitten.age} · {kitten.location}</p>
+        <p className="kitten-details">{kitten.breed} · {kitten.location}</p>
         <div className="card-actions-row">
           <a href={waUrl} target="_blank" rel="noreferrer" className="card-cta">Get {kitten.name}</a>
           <a
@@ -538,7 +571,7 @@ function App() {
                 and lifelong guidance for every family.
               </p>
               <p className="hero-text subtle-text">
-                Discover Ragdoll, British Shorthair, Bengal, and Maine Coon companions—each home grown with careful attention from day one.
+                Discover Ragdoll, British Shorthair, Bengal, and Maine Coon companions—each home raised with careful attention from day one.
               </p>
 
               <div className="hero-actions">
@@ -627,7 +660,7 @@ function App() {
         <section className="section" id="kittens">
           <div className="container">
             <div className="section-heading">
-              <p className="eyebrow">Home grown · healthy</p>
+              <p className="eyebrow">Home raised · healthy</p>
               <h2>Meet our beautiful cats, breed by breed.</h2>
             </div>
 
