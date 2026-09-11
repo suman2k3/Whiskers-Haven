@@ -5,8 +5,14 @@ import { ImageLightbox } from './components/ImageLightbox';
 import whiskerLogo from './assets/whisker-logo.png';
 import ragdoll1Img from './assets/ragdoll1.jpg';
 import ragdoll2Img from './assets/ragdoll2.jpg';
+import ragdoll3Img from './assets/ragdoll3.jpg';
+import ragdoll4Img from './assets/ragdoll4.jpg';
+import ragdoll5Img from './assets/ragdoll5.jpg';
 import bshNew1Img from './assets/bsh_new1.jpg';
 import bshNew2Img from './assets/bsh_new2.jpg';
+import bsh3Img from './assets/bsh3.jpg';
+import bsh4Img from './assets/bsh4.jpg';
+import bsh5Img from './assets/bsh5.jpg';
 import bengalNew1Img from './assets/bengal_new1.jpg';
 import bengalNew2Img from './assets/bengal_new2.jpg';
 import bsh1Img from './assets/bsh1.png';
@@ -15,6 +21,9 @@ import bengalImg from './assets/bengal.png';
 import bengal2Img from './assets/bengal2.png';
 import mainecoonNew1Img from './assets/mainecoon_new1.jpg';
 import mainecoonNew2Img from './assets/mainecoon_new2.jpg';
+import mainecoon3Img from './assets/mainecoon3.jpg';
+import mainecoon4Img from './assets/mainecoon4.jpg';
+import mainecoon5Img from './assets/mainecoon5.jpg';
 import mainecoon1Img from './assets/mainecoon1.png';
 import mainecoon2Img from './assets/mainecoon2.png';
 
@@ -75,10 +84,10 @@ const highlights = [
 ];
 
 const kittens = [
-  { name: 'Ragdoll', breed: 'Ragdoll', location: 'Home raised', images: [ragdoll1Img, ragdoll2Img] },
-  { name: 'British Shorthair', breed: 'British Shorthair', location: 'Home raised', images: [bshNew1Img, bshNew2Img] },
+  { name: 'Ragdoll', breed: 'Ragdoll', location: 'Home raised', images: [ragdoll1Img, ragdoll2Img, ragdoll3Img, ragdoll4Img, ragdoll5Img] },
+  { name: 'British Shorthair', breed: 'British Shorthair', location: 'Home raised', images: [bshNew1Img, bshNew2Img, bsh3Img, bsh4Img, bsh5Img] },
   { name: 'Bengal', breed: 'Bengal', location: 'Health checked', images: [bengalNew1Img, bengalNew2Img] },
-  { name: 'Maine Coon', breed: 'Maine Coon', location: 'Health checked', images: [mainecoonNew1Img, mainecoonNew2Img] }
+  { name: 'Maine Coon', breed: 'Maine Coon', location: 'Health checked', images: [mainecoonNew1Img, mainecoonNew2Img, mainecoon3Img, mainecoon4Img, mainecoon5Img] }
 ];
 
 const breeds = [
