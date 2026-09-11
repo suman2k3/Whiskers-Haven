@@ -106,9 +106,21 @@ function VariantCard({ variant, primaryPhoneLink }) {
 }
 
 export function BreedDetailPage({ breed, onBack, primaryPhoneLink }) {
+  const images = breed?.images || (breed?.coverImage ? [breed.coverImage] : []);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [heroLightboxOpen, setHeroLightboxOpen] = useState(false);
 
   if (!breed) return null;
+
+  const prevImage = (e) => {
+    if (e) e.stopPropagation();
+    setCurrentImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const nextImage = (e) => {
+    if (e) e.stopPropagation();
+    setCurrentImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
 
   return (
     <div className="breed-detail-page">
@@ -132,7 +144,7 @@ export function BreedDetailPage({ breed, onBack, primaryPhoneLink }) {
 
           <div className="breed-hero-grid">
             <div className="breed-cover-wrap">
-              <img src={breed.coverImage} alt={breed.name} />
+              <img src={images[currentImgIndex]} alt={breed.name} />
               <button
                 type="button"
                 className="card-resize-btn"
@@ -152,13 +164,35 @@ export function BreedDetailPage({ breed, onBack, primaryPhoneLink }) {
                 </svg>
               </button>
               <span className="cover-badge">Official Breed Guide</span>
+
+              {images.length > 1 && (
+                <>
+                  <button type="button" className="card-slider-btn prev" onClick={prevImage} aria-label="Previous image">
+                    ‹
+                  </button>
+                  <button type="button" className="card-slider-btn next" onClick={nextImage} aria-label="Next image">
+                    ›
+                  </button>
+                  <div className="card-slider-dots">
+                    {images.map((_, idx) => (
+                      <span
+                        key={idx}
+                        className={`card-dot ${idx === currentImgIndex ? 'active' : ''}`}
+                        onClick={(e) => { e.stopPropagation(); setCurrentImgIndex(idx); }}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             {heroLightboxOpen && (
               <ImageLightbox
-                images={[breed.coverImage]}
-                currentIndex={0}
+                images={images}
+                currentIndex={currentImgIndex}
                 onClose={() => setHeroLightboxOpen(false)}
+                onPrev={() => setCurrentImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+                onNext={() => setCurrentImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
               />
             )}
 
@@ -206,30 +240,6 @@ export function BreedDetailPage({ breed, onBack, primaryPhoneLink }) {
         </div>
       </section>
 
-      {/* Available Cats / Variants Section */}
-      <section className="section breed-variants-section">
-        <div className="container">
-          <div className="section-heading">
-            <p className="eyebrow">Available Kittens</p>
-            <h2>Meet our available {breed.name}s.</h2>
-            <p className="section-subtitle">
-              Each kitten is home raised, health-screened, and ready to bring warmth to your home.
-            </p>
-          </div>
-
-          {breed.variants && breed.variants.length > 0 ? (
-            <div className="variants-grid">
-              {breed.variants.map((variant) => (
-                <VariantCard key={variant.id} variant={variant} primaryPhoneLink={primaryPhoneLink} />
-              ))}
-            </div>
-          ) : (
-            <div className="no-variants-box">
-              <p>New {breed.name} litters will be available very soon. Contact us for upcoming reservations!</p>
-            </div>
-          )}
-        </div>
-      </section>
     </div>
   );
 }

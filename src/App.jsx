@@ -17,8 +17,6 @@ import bengalNew1Img from './assets/bengal_new1.jpg';
 import bengalNew2Img from './assets/bengal_new2.jpg';
 import bsh1Img from './assets/bsh1.png';
 import bsh2Img from './assets/bsh2.png';
-import bengalImg from './assets/bengal.png';
-import bengal2Img from './assets/bengal2.png';
 import mainecoonNew1Img from './assets/mainecoon_new1.jpg';
 import mainecoonNew2Img from './assets/mainecoon_new2.jpg';
 import mainecoon3Img from './assets/mainecoon3.jpg';

@@ -1825,7 +1825,7 @@ section[id] { scroll-margin-top: 110px; }
 
 .breed-cover-wrap img {
   width: 100%;
-  height: 440px;
+  height: 540px;
   object-fit: cover;
   display: block;
 }
@@ -2114,7 +2114,7 @@ section[id] { scroll-margin-top: 110px; }
     grid-template-columns: 1fr;
   }
   .breed-cover-wrap img {
-    height: 320px;
+    height: 420px;
   }
   .characteristics-grid {
     grid-template-columns: 1fr;
