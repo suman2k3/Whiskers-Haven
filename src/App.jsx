@@ -1197,12 +1197,12 @@ function App() {
             <div className="contact-info">
               <p className="eyebrow">Get in touch</p>
               <h2>Ready to welcome your new companion?</h2>
-              <p>We are currently dealing only in Ragdoll kittens.</p>
+              
               <p><strong>Address:</strong> M6, KP1, Jaypee Wishtown, Sector 133</p>
               <p><strong>Phone:</strong> <a href={`tel:${primaryPhoneLink}`}>{primaryPhone}</a></p>
               <p><strong>Alternate phone:</strong> <a href="tel:+918630252570">{secondaryPhone}</a></p>
               <p><strong>Email:</strong> whiskershavenindia@gmail.com</p>
-              <p>British Shorthair, Maine Coon, and Scottish Fold will be introduced very soon.</p>
+              
             </div>
             <form className="contact-form" onSubmit={handleSubmit}>
               <input name="name" type="text" placeholder="Your name" required />
